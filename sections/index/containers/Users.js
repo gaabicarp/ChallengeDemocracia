@@ -12,10 +12,12 @@ class Users extends Component {
         }
     }
 
+    //Llamo a la funcion updatePosts cuando el componente se monta
     componentDidMount(){
         this.updatePosts()
     }
 
+    //Hago el pedido a la api para traer los post de los usuarios y los guardo en el estado
     updatePosts(){
         const apiUrl = 'api/publicaciones-user'
         fetch(apiUrl)
