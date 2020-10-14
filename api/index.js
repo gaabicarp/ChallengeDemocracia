@@ -13,6 +13,10 @@ const {
 } = require('./lib/mailgun')
 
 const {
+  getPublicacionesUsers
+} = require('./lib/users')
+
+const {
   getPublicaciones
 } = require('./lib/medium')
 
@@ -23,7 +27,7 @@ const {
 const upload = multer({ limits: { fileSize: 5000000, files: 1 } }) // 1 file 5MB max
 
 
-
+Router.get('/publicaciones-user', getPublicacionesUsers)
 Router.get('/casos', getPublicacionesCasos)
 Router.get('/publicaciones', getPublicaciones)
 Router.post('/validar-subscripcion', mandarConfirmacion)

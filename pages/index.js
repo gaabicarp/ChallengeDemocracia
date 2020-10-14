@@ -12,6 +12,7 @@ import WhoWeAre from '../sections/index/containers/WhoWeAre'
 import Publications from '../sections/index/containers/Publications'
 import Footer from '../containers/Footer'
 import Content from "../sections/about/containers/Content"
+import Users from '../sections/index/containers/Users'
 const env = 'undefined' !== process ? process.env.YOUTUBE_API_KEY : null
 
 export default class extends Component {
@@ -82,6 +83,7 @@ export default class extends Component {
         <Layout changeLang={this.changeLang} currentLang={this.state.currentLang}>
           <Header modal={this.state.modal} content={this.state.content} hideModal={this.hideModal} />
           <Cases currentLang={this.state.currentLang} />
+          <Users />
           <Collaborate />
           <Publications currentLang={this.state.currentLang} />
           <Content />
