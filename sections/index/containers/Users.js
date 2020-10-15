@@ -58,7 +58,7 @@ class Users extends Component {
                     })
                 this.setState({posts: data})
                 this.setState({postsFiltrados: data})
-                console.log(this.state.posts)
+                //console.log(this.state.posts)
             })
     }
 

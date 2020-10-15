@@ -16,7 +16,6 @@ function getInfoUsers(req, res) {
   // console.log(req.body.userId, 'as')
   fetchInfoUsers(req.body.userId)
         .then(user => {
-            console.log(user)
             res.json({userInfo : user})
         })
         .catch(err => {
