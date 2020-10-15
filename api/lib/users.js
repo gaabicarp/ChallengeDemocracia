@@ -2,7 +2,7 @@ const request = require('request')
 
 //llamo a la funcion getPost y devuelvo en un json su contenido.
 function getPublicacionesUsers(req, res) {
-    getPosts()
+  fetchPost()
         .then(posts => {
             res.json(posts)
         })
@@ -12,9 +12,22 @@ function getPublicacionesUsers(req, res) {
         })
 }
 
+function getInfoUsers(req, res) {
+  // console.log(req.body.userId, 'as')
+  fetchInfoUsers(req.body.userId)
+        .then(user => {
+            console.log(user)
+            res.json({userInfo : user})
+        })
+        .catch(err => {
+            console.log(err)
+            res.status(500).end()
+        })
+}
+
 
 //traigo los usuarios de la api pedida
-function getPosts () {
+function fetchPost () {
     return new Promise(function (resolve, reject) {
       request({
         url: `https://jsonplaceholder.typicode.com/posts`,
@@ -35,5 +48,20 @@ function getPosts () {
     })
   }
 
+function fetchInfoUsers(userId){
+  return new Promise(function(resolve,reject){
+    request({
+      url: `https://jsonplaceholder.typicode.com/users/${userId}`,
+      json: true
+    }, function(error, response, body){
+      if (!error && response.statusCode === 200){
+        resolve(body)
+      } else {
+        reject(error || response.statusCode)
+      }
+    })
+  })
+} 
 
-module.exports = { getPublicacionesUsers }
+
+module.exports = { getPublicacionesUsers, getInfoUsers }

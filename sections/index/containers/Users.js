@@ -8,7 +8,9 @@ class Users extends Component {
         super(props)
         this.state = {
             mobile: false,
-            posts: []
+            posts: [],
+            postsFiltrados: [],
+            buscar: ''
         }
     }
 
@@ -17,14 +19,46 @@ class Users extends Component {
         this.updatePosts()
     }
 
+    onChange = e =>{
+        this.setState({buscar: e.target.value})
+        if(e.target.value.length < 3){
+            this.setState({postsFiltrados: this.state.posts})
+            return
+        } 
+        let a = this.state.posts.filter(post=>{
+            return post.title.toLowerCase().includes(this.state.buscar.toLowerCase())
+        })
+        console.log(a)
+        this.setState({postsFiltrados: a})
+    }
+
     //Hago el pedido a la api para traer los post de los usuarios y los guardo en el estado
     updatePosts(){
-        const apiUrl = 'api/publicaciones-user'
-        fetch(apiUrl)
+        fetch('api/publicaciones-user')
             .then( res => res.json())
             .then( data => {
-                console.log(data);
+                // console.log(data)
+                data.map( post => {
+                    //console.log(post)
+                    const a = {
+                        userId: post.userId
+                    }
+                    fetch('api/user-info',{
+                        method: 'POST',
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(a)
+                      })
+                        .then( res => res.json())
+                        .then( user => {
+                            //console.log(user.userInfo)
+                            post.usuario = user.userInfo;
+                        })
+                    })
                 this.setState({posts: data})
+                this.setState({postsFiltrados: data})
+                console.log(this.state.posts)
             })
     }
 
@@ -32,12 +66,19 @@ class Users extends Component {
         return(
             <section className='users-section' id='users'>
                 <h2 className='section-title'>Usuarios</h2>
+                <div className='section-title'>
+                    <input type="text" name="buscador" placeholder="Buscar..." onChange={this.onChange}></input>
+                </div>
                 <div className="userposts-container">
-                    {this.state.posts.map((post, i)=>
+                    {this.state.postsFiltrados.map((post, i)=>
                         <UserPost
-                            key={i}
-                            title={post.title}
-                            body={post.body} />
+                          key={i}
+                          title={post.title}
+                          body={post.body} 
+                          username={post.usuario.username}
+                          name={post.usuario.name}
+                          email={post.usuario.email}
+                        />
                     )}
                 </div>
 
@@ -45,8 +86,6 @@ class Users extends Component {
                     .users-section {
                         display: flex;
                         flex-wrap: wrap;
-                        padding-bottom: 85px;
-                        overflow-x: hidden;
                     }
                     .userposts-container {
                         margin-top: 43px;
@@ -65,10 +104,8 @@ class Users extends Component {
                         }
                         .userposts-container {
                             margin: 24px 0 33px;
-                            display: block;
-                            overflow: hidden;
                             width: 100%;
-                            height: 229px;
+                            
                         }
                     }
                     @media (max-width: 475px) {
